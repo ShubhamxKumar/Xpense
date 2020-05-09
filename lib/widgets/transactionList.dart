@@ -11,20 +11,11 @@ class TransactionList extends StatefulWidget {
 }
 
 class _TransactionListState extends State<TransactionList> {
-  void deleteTransactions(String id) {
-    setState(() {
-      transactionsList.removeWhere((element) {
-        return element.id == id;
-      });
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(20),
-      height: MediaQuery.of(context).size.height -
-          300, // parent height is necessary when using builder method, so that it know after what point it should
+      margin: EdgeInsets.all(20), // parent height is necessary when using builder method, so that it know after what point it should
       //not render elements.
       child: ListView.builder(
         // ListView builder was used in place of List view because it renders only the items that are onscreen and does not render those which are offscreen.

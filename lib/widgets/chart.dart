@@ -44,29 +44,21 @@ class Chart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print(getDetailForDay);
-    return Container(
-      margin: EdgeInsets.all(20),
-      child: Card(
-        elevation: 6,
-        child: Container(
-          margin: EdgeInsets.all(20),
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal, 
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: getDetailForDay.map((tx) {
-                return ChartBar(
-                  label: tx['day'],
-                  amountSpent: double.parse(tx['amount']),
-                  percentOfTotalAmount: (getWeekAmountTotal == 0)
-                      ? 0.0
-                      : double.parse(tx['amount']) / getWeekAmountTotal,
-                );
-              }).toList(),
-            ),
-          ),
-        ),
+    return Card(
+      margin: EdgeInsets.all(15),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: getDetailForDay.map((tx) {
+          return ChartBar(
+            label: tx['day'],
+            amountSpent: double.parse(tx['amount']),
+            percentOfTotalAmount: (getWeekAmountTotal == 0)
+                ? 0.0
+                : double.parse(tx['amount']) / getWeekAmountTotal,
+          );
+        }).toList(),
       ),
+      elevation: 6,
     );
   }
 }

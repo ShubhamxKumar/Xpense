@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:xpense/models/transactionModel.dart';
 import 'package:xpense/widgets/addTransaction.dart';
 import 'package:xpense/widgets/chart.dart';
-import 'package:xpense/widgets/transactionCard.dart';
 import 'package:xpense/widgets/transactionList.dart';
 import '../transactionList.dart';
+import 'package:flutter/services.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -13,6 +13,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
+bool _toggle = false;
+
   double sum;
 
   void deleteTransactions(String id) {
@@ -54,10 +57,9 @@ class _HomePageState extends State<HomePage> {
             ctx, // this widget need context as a argument. That's why we use "ctx"
         builder: (s) {
           //this widget accept a function as a parameter. And the builder argument needs
-           // a function which accepts a string value, but we don't use it right now,
-           //so we just assign a random string.
-          return AddTransaction(
-              dataValidation); 
+          // a function which accepts a string value, but we don't use it right now,
+          //so we just assign a random string.
+          return AddTransaction(dataValidation);
         });
   }
 
@@ -71,25 +73,63 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 5,
-        backgroundColor: Colors.grey[50],
-        title: Center(
-          child: Text(
-            'Xpense',
-            style: TextStyle(
-              color: Color(0xff410056),
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
-            ),
+    
+  final _isLandscape = MediaQuery.of(context).orientation == Orientation.landscape; // stores info about if the app is in landscape mode or not
+    final appBar = AppBar(
+      elevation: 5,
+      backgroundColor: Colors.grey[50],
+      title: Center(
+        child: Text(
+          'Xpense',
+          style: TextStyle(
+            color: Color(0xff410056),
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
           ),
         ),
       ),
+    ); // we are storing the appbar in a widget so that we can get access to its height.
+    return Scaffold(
+      appBar: appBar,
       body: ListView(
         children: <Widget>[
-          Chart(recentTransactionList),
-          TransactionList(deleteTransactions),
+          _isLandscape?Row(  // show the switch only when in landscape mode
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text('Show Chart'),
+              Switch(value: _toggle, onChanged: (val) { // this widget it enables a switch that toggles a value 
+                setState(() {
+                  _toggle = val;
+                });
+              })
+            ],
+          ):Container(height: 0, width: 0,),
+
+          if(!_isLandscape) Container( // if not in landscape mode then show bit chart and list.
+            child: Chart(recentTransactionList),
+            height: (MediaQuery.of(context).size.height - 
+                    appBar.preferredSize.height -  // this give us the height of the appbar
+                    MediaQuery.of(context).padding.top) * 0.4 ),
+          if(!_isLandscape) Container(
+            child: TransactionList(deleteTransactions),
+            height: (MediaQuery.of(context).size.height -
+                    appBar.preferredSize.height -
+                    MediaQuery.of(context).padding.top) *
+                0.6,
+          ),         
+          if(_isLandscape)_toggle ? Container(
+            child: Chart(recentTransactionList),
+            height: (MediaQuery.of(context).size.height - 
+                    appBar.preferredSize.height -  // this give us the height of the appbar
+                    MediaQuery.of(context).padding.top) * 0.7 ,// this gives us the height of the notch/status bar of the mobile.
+          ):
+          Container(
+            child: TransactionList(deleteTransactions),
+            height: (MediaQuery.of(context).size.height -
+                    appBar.preferredSize.height -
+                    MediaQuery.of(context).padding.top) *
+                0.6,
+          ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
