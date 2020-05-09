@@ -4,7 +4,7 @@ import 'package:xpense/models/transactionModel.dart';
 import 'package:xpense/widgets/addTransaction.dart';
 import 'package:xpense/widgets/chart.dart';
 import 'package:xpense/widgets/transactionCard.dart';
-
+import 'package:xpense/widgets/transactionList.dart';
 import '../transactionList.dart';
 
 class HomePage extends StatefulWidget {
@@ -54,9 +54,10 @@ class _HomePageState extends State<HomePage> {
             ctx, // this widget need context as a argument. That's why we use "ctx"
         builder: (s) {
           //this widget accept a function as a parameter. And the builder argument needs
+           // a function which accepts a string value, but we don't use it right now,
+           //so we just assign a random string.
           return AddTransaction(
-              // a function which accepts a string value, but we don't use it right now,
-              dataValidation); //so we just assign a random string.
+              dataValidation); 
         });
   }
 
@@ -88,29 +89,7 @@ class _HomePageState extends State<HomePage> {
       body: ListView(
         children: <Widget>[
           Chart(recentTransactionList),
-          Container(
-            margin: EdgeInsets.all(20),
-            height: MediaQuery.of(context).size.height -
-                300, // parent height is necessary when using builder method, so that it know after what point it should
-            //not render elements.
-            child: ListView.builder(
-              // ListView builder was used in place of List view because it renders only the items that are onscreen and does not render those which are offscreen.
-              itemBuilder: (context, index) {
-                //itembuilder calls a function which renders the list, it returns the index as int and it access all the indexes one by one
-                return TransactionCard(
-                  //till the number specified by item count which in this case is the lenght of the list
-                  amount: transactionsList[index]
-                      .amount, //this is usefull when u dont know the number of items in the list,
-                  title: transactionsList[index]
-                      .title, //and also increase performance by not building unnecessary items that
-                  id: transactionsList[index].id, //do not appear on the screen.
-                  date: transactionsList[index].date,
-                  deleteTransaction: deleteTransactions,
-                );
-              },
-              itemCount: transactionsList.length,
-            ),
-          ),
+          TransactionList(deleteTransactions),
         ],
       ),
       floatingActionButton: FloatingActionButton(
