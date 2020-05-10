@@ -1,3 +1,5 @@
+
+import 'dart:io';  // it unlocks the platform class so as to check which os we are running on
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:xpense/models/transactionModel.dart';
@@ -97,8 +99,8 @@ bool _toggle = false;
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text('Show Chart'),
-              Switch(value: _toggle, onChanged: (val) { // this widget it enables a switch that toggles a value 
-                setState(() {
+              Switch.adaptive(value: _toggle, onChanged: (val) { // this widget it enables a switch that toggles a value 
+                setState(() {                                    // .adaptive for some widgets change the looks according to ios automatically
                   _toggle = val;
                 });
               })
@@ -132,7 +134,7 @@ bool _toggle = false;
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: Platform.isIOS? Container(height: 0, width: 0,) :FloatingActionButton( // this performs a simple check for the platform if the OS is iOS or android
         onPressed: () {
           startAddNewTransaction(context);
         },

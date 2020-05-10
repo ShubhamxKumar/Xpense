@@ -24,7 +24,7 @@ class _AddTransactionState extends State<AddTransaction> {
     ).then((pickedDate) {
       // Date picker returns Future date that has been chosen, by the user after the user click ok on the date picker
       setState(() {
-        selectedDate = pickedDate;
+        selectedDate = pickedDate; //and then we save the value in a variable and change the state. 
       });
     });
   }
